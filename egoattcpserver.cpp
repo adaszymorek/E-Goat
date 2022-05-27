@@ -16,7 +16,7 @@ EGoatTcpServer::EGoatTcpServer(QObject *parent)
 
 void EGoatTcpServer::newConnection()
 {
-    // need to grab the socket
+    // need to  grab the socket
     QTcpSocket *socket = server->nextPendingConnection();
 
     //ALL OF E GOAT SERVER ACTIONS SHOULD BE IMPLEMENTED HERE
