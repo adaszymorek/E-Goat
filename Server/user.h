@@ -11,6 +11,7 @@ public:
     QVector<std::string> checksumVector;
 
 
+    User();
     User(QByteArray username);
     User(QByteArray username, QByteArray checksums);
 
