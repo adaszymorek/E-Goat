@@ -20,11 +20,20 @@ void EGoatTcpServer::newConnection()
     QTcpSocket *socket = server->nextPendingConnection();
 
     //ALL OF E GOAT SERVER ACTIONS SHOULD BE IMPLEMENTED HERE
-    socket->write("Hello client \r\n");
+    socket->write("Hello client");
     socket->flush();
 
     socket->waitForBytesWritten();
-    socket->waitForReadyRead(3000);
+    if(socket->waitForReadyRead())
+    {
+        qDebug() << "Ready to get username";
+        User* newUser = new User(socket->readAll());
+
+        qDebug() << "Ready to get checksums";
+        newUser->
+    }
+
+
 
     qDebug() << "Reading: " << socket->bytesAvailable();
 

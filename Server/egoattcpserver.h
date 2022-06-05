@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QTcpServer>
 #include <QDebug>
+#include "user.h"
 
 class EGoatTcpServer : public QObject
 {
@@ -20,6 +21,7 @@ public slots:
 
 private:
     QTcpServer *server;
+    QVector<User> usersVector;
 };
 
 #endif // EGOATTCPSERVER_H
