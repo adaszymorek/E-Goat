@@ -12,14 +12,19 @@ class EGoatTcpClient : public QObject
 {
     Q_OBJECT
 public:
-    std::string checksumSelected;
-    std::string userSelected;
-    std::string usernameSelected;
+    QString checksumSelected;
+    QString userSelected;
+    QString usernameSelected;
     QByteArray usersWithFile;
+    QString m3 = "Write a name of user you want to connect to download file:";
+
 
     explicit EGoatTcpClient(QObject *parent = nullptr);
     void doConnect();
-    void writeString(QString message, std::string s, QTcpSocket *socket);
+    void socketWriteString(QString message, QString s, QTcpSocket *socket1);
+    void socketWriteString(const char *s, QTcpSocket *socket1);
+    void coutWrite(QString message);
+    void coutWrite(QByteArray bytes);
 
 signals:
 
@@ -29,6 +34,10 @@ private:
     QTcpSocket *socket;
     QDir directoryLoaded;
     QVector<std::string> checksumVector;
+    QByteArray coutBuff = NULL;
+    QDataStream *out;
+    QTextStream *cin;
+    QTextStream *cout;
 
 
 };

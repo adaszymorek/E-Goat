@@ -3,7 +3,7 @@
 User::User(QByteArray username, QByteArray checksums)
 {
     this->username = username;
-
+    setChecksums(checksums);
 }
 User::User(QByteArray username)
 {
@@ -12,14 +12,10 @@ User::User(QByteArray username)
 QByteArray User::getUsername(){
     return username;
 }
-QVector<std::string> User::getChecksums(){
-    return checksumVector;
+QStringList User::getChecksums(){
+    return checksumList;
 }
 void User::setChecksums(QByteArray checksums){
-   std::string checksumStr = checksums.toStdString();
-
-
-}
-std::string User::searchChecksums(){
-
+   QString checksumStr = QString(checksums);
+    checksumList = checksumStr.split(", ", Qt::SkipEmptyParts);
 }

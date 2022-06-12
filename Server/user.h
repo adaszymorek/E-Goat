@@ -2,23 +2,19 @@
 #define USER_H
 
 #include <QByteArray>
-#include <QVector>
-
+#include <QStringList>
 class User
 {
 public:
     QByteArray username;
-    QVector<std::string> checksumVector;
+    QStringList checksumList;
 
-
-    User();
     User(QByteArray username);
     User(QByteArray username, QByteArray checksums);
 
     QByteArray getUsername();
-    QVector<std::string> getChecksums();
+    QStringList getChecksums();
     void setChecksums(QByteArray checksums);
-    std::string searchChecksums();
 };
 
 #endif // USER_H
