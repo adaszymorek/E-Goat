@@ -3,18 +3,20 @@
 
 #include <QByteArray>
 #include <QStringList>
+#include <QHostAddress>
+#include <QTcpSocket>
 class User
 {
 public:
-    QByteArray username;
-    QStringList checksumList;
+    QHostAddress userIP;
+    QMap<QString, QByteArray> fileNamesAndChecksums;
 
-    User(QByteArray username);
-    User(QByteArray username, QByteArray checksums);
+    User(QHostAddress userIP);
+    User(QHostAddress userIP, QByteArray checksums, QTcpSocket *socket);
 
-    QByteArray getUsername();
-    QStringList getChecksums();
-    void setChecksums(QByteArray checksums);
+    QHostAddress getUserIP();
+    QMap<QString, QByteArray> getfileNamesAndChecksums();
+    void setChecksums(QByteArray checksums, QTcpSocket *socket);
 };
 
 #endif // USER_H

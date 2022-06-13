@@ -22,30 +22,27 @@ void EGoatTcpServer::newConnection()
 {
     // need to  grab the socket
     QTcpSocket *socket = server->nextPendingConnection();
-    User* newUser = new User(NULL);
+    User* newUser = new User(socket->peerAddress());
+
 
     //ALL OF E GOAT SERVER ACTIONS SHOULD BE IMPLEMENTED HERE
-    socketWriteString("Hello client! Select your name. Write q to exit \n", socket);
+    socketWriteString("Hello client! Write q to exit \n", socket);
 
     socket->waitForReadyRead();
     coutWrite(socket->readAll());
 
-    coutWrite(QString("Ready to get username \n"));
+    coutWrite(QString("Ready to get checksums \n"));
 
     socket->waitForReadyRead();
+    *cout << socket->bytesAvailable();
     while(socket->bytesAvailable())
     {
-        coutWrite(QString("user created: "));
         *out << socket->readAll();
-        newUser = new User(block);
-        coutWrite(newUser->username);
+        newUser->setChecksums(block, socket);
+        coutWrite(QString("checksums loaded"));
 
-        coutWrite(QString("\nReady to get checksums"));
         socket->waitForReadyRead();
         *out << socket->readAll();
-        newUser->setChecksums(block);
-
-        socketWriteString("\nsome users", socket);
     }
     socket->close();
 }
@@ -64,26 +61,4 @@ void EGoatTcpServer::socketWriteString(const char* s, QTcpSocket *socket1)
     socket1->write(s);
     socket1->flush();
     socket1->waitForBytesWritten();
-}
-std::string EGoatTcpServer::sum()
-{
-    int liczba = hashLength(QCryptographicHash::Sha3_512);
-    std::string suma = std::to_string(liczba);
-    return suma;
-}
-QFileInfoList EGoatTcpServer::getFilesChecksums()
-{
-    QDir("D:/qt prace");
-    QDir dir;
-    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
-    dir.setSorting(QDir::Size | QDir::Reversed);
-
-    QFileInfoList list = dir.entryInfoList();
-    QFileInfoList listsuma = dir.entryInfoList();
-    for (int i = 0; i < list.size(); ++i) {
-        QFileInfo fileInfo = list.at(i);
-        listsuma.at(i) = sum();
-    }
-    return list;
-    return listsuma;
 }

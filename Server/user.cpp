@@ -1,21 +1,23 @@
 #include "user.h"
 
-User::User(QByteArray username, QByteArray checksums)
+User::User(QHostAddress userIP, QByteArray checksums, QTcpSocket *socket)
 {
-    this->username = username;
-    setChecksums(checksums);
+    this->userIP = userIP;
+    setChecksums(checksums, socket);
 }
-User::User(QByteArray username)
+User::User(QHostAddress userIP)
 {
-    this->username = username;
+    this->userIP = userIP;
 }
-QByteArray User::getUsername(){
-    return username;
+QHostAddress User::getUserIP(){
+    return userIP;
 }
-QStringList User::getChecksums(){
-    return checksumList;
+QMap<QString, QByteArray> User::getfileNamesAndChecksums(){
+    return fileNamesAndChecksums;
 }
-void User::setChecksums(QByteArray checksums){
-   QString checksumStr = QString(checksums);
-    checksumList = checksumStr.split(", ", Qt::SkipEmptyParts);
+void User::setChecksums(QByteArray checksums, QTcpSocket *socket){
+    QDataStream readStream(socket);
+    QMap<QString, QByteArray> map;
+    readStream >> map;
+    fileNamesAndChecksums = map;
 }

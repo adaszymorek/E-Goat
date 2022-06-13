@@ -7,6 +7,8 @@
 #include <QDebug>
 #include <QDir>
 #include <QVector>
+#include <QCryptographicHash>
+#include <QFileDialog>
 
 class EGoatTcpClient : public QObject
 {
@@ -14,7 +16,6 @@ class EGoatTcpClient : public QObject
 public:
     QString checksumSelected;
     QString userSelected;
-    QString usernameSelected;
     QByteArray usersWithFile;
     QString m3 = "Write a name of user you want to connect to download file:";
 
@@ -25,6 +26,8 @@ public:
     void socketWriteString(const char *s, QTcpSocket *socket1);
     void coutWrite(QString message);
     void coutWrite(QByteArray bytes);
+    QByteArray fileChecksum(const QString &fileName);
+    QMap<QString, QByteArray> setFilesChecksums(QDir dir);
 
 signals:
 
@@ -33,7 +36,7 @@ public slots:
 private:
     QTcpSocket *socket;
     QDir directoryLoaded;
-    QVector<std::string> checksumVector;
+    QMap<QString, QByteArray> fileNamesAndChecksums;
     QByteArray coutBuff = NULL;
     QDataStream *out;
     QTextStream *cin;

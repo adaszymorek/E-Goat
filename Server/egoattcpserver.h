@@ -18,8 +18,6 @@ public:
     void coutWrite(QString message);
     void coutWrite(QByteArray bytes);
     void socketWriteString(const char* s, QTcpSocket *socket1);
-    std::string sum();
-    QFileInfoList getFilesChecksums();
 
 
 signals:
@@ -30,7 +28,7 @@ public slots:
 
 private:
     QTcpServer *server;
-    QVector<User> usersVector;
+    QList<User> usersList;
     QByteArray block;
     QDataStream *out;
     QTextStream *cout;

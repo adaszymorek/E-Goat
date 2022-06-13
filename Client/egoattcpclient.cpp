@@ -1,5 +1,6 @@
 #include "egoattcpclient.h"
 
+
 EGoatTcpClient::EGoatTcpClient(QObject *parent)
     : QObject{parent}
 {
@@ -25,15 +26,16 @@ void EGoatTcpClient::doConnect()
         if(socket->bytesAvailable())
         {
             *out << socket->readAll();
-            coutWrite(coutBuff);/*
-            cout << "Enter your username:" << "\n";
-            cout.flush();
-            cin >> this->usernameSelected;
-            socket->write(this->usernameSelected.toUtf8());
-            socket->flush();*/
-            //socket->waitForBytesWritten();
-            socketWriteString(QString("Enter your username:"), usernameSelected, socket);
-            socketWriteString(QString("Files checksums loaded. Write checksum (sha512) of file to get usernames of owners of this file.\n"),
+            coutWrite(coutBuff);
+            coutWrite(QString("enter directory path: "));
+            QString path;
+            *cin >> path;
+            QDir directoryLoaded(path);
+            setFilesChecksums(directoryLoaded);
+            QByteArray preparedQMap = QByteArray(reinterpret_cast<char*>(&fileNamesAndChecksums), sizeof (fileNamesAndChecksums));
+            socket->write(preparedQMap);
+
+            socketWriteString(QString("Files checksums loaded. Write name of file to get user IPs of owners of this file.\n"),
                               checksumSelected, socket);
 
             socket->waitForReadyRead();
@@ -82,4 +84,27 @@ void EGoatTcpClient::socketWriteString(const char* s, QTcpSocket *socket1)
     socket1->write(s);
     socket1->flush();
     socket1->waitForBytesWritten();
+}
+QByteArray EGoatTcpClient::fileChecksum(const QString &fileName)
+{
+    QFile f(fileName);
+    if (f.open(QFile::ReadOnly)) {
+        QCryptographicHash hash(QCryptographicHash::Sha512);
+        if (hash.addData(&f)) {
+            return hash.result();
+        }
+    }
+    return QByteArray();
+}
+QMap<QString, QByteArray> EGoatTcpClient::setFilesChecksums(QDir dir)
+{
+    dir.setFilter(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    dir.setSorting(QDir::Size | QDir::Reversed);
+
+    QStringList list = dir.entryList();
+    for(int i = 0; i < list.length(); i++)
+    {
+       fileNamesAndChecksums.insert(list.at(i), fileChecksum(list.at(i)));
+    }
+    return fileNamesAndChecksums;
 }
